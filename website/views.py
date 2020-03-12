@@ -167,3 +167,6 @@ def autocompleteModel(request):
 
     return JsonResponse({ 'suggestions': data })
 
+
+def login(request):
+    return render(request, 'website/login.html')

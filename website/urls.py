@@ -9,7 +9,8 @@ urlpatterns = [
     path('policy/', views.policy_search, name='policy-search'),
     path('policy_suggest/', views.autocompleteModel, name='policy-suggest'),
     path('about_page/', views.about_page, name='about-page'),
-    path('contribute_policy/', views.contribute_policy, name='contribute-policy')
+    path('contribute_policy/', views.contribute_policy, name='contribute-policy'),
+    path('login/', views.login, name="login")
 ]
 
 urlpatterns += staticfiles_urlpatterns()
