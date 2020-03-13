@@ -46,7 +46,18 @@
     </div>
     <aside id="aside">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <!-- <div class="count">Showing results {{ policies.start_index }}–{{ policies.end_index }} of {{ policies.paginator.count }} </div> -->
+        <div class="count">
+            <!-- Showing {{ policies.end_index }} of {{ policies.paginator.count }} results -->
+            Results per page: <form method="GET" class="d-inline">
+                <input type="hidden" class="query" name="search" value=""/>
+                <select id="num_results" name="num_results" onchange="form.submit()">
+                    <option disabled selected>Select number</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
+            </form>
+        </div>
         <div id="rsum">
             <h2>Filter by:</h2>
             <label class="panel" for="toggle">Year<div class="icon">+</div></label>
@@ -68,8 +79,14 @@
             <input type="checkbox" id="toggle-two">
             <div class="dropdown-two">
                 <div id="school-filter">
-                    <form method="GET" class="filters">
+                    <form id="school-form" method="GET" class="filters" autocomplete="off">
                         <input type="hidden" class="query" name="search" value=""/>
+                        <div class="inner-addon left-addon">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <input type="text" id="school-search" name="search" class="form-control"
+                                placeholder="Enter school name here"
+                                aria-label="Search">
+                        </div>
                         {% for hit in all %}
                         {% if hit.school is not None %}
                         <input class="filter" name="filter" type="checkbox" value="{{hit.school}}"
@@ -83,8 +100,14 @@
             <input type="checkbox" id="toggle-three">
             <div class="dropdown-three">
                 <div id="state-filter">
-                    <form method="GET" class="filters">
+                    <form id="state-form" method="GET" class="filters" autocomplete="off">
                         <input type="hidden" class="query" name="search" value=""/>
+                        <div class="inner-addon left-addon">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            <input type="text" id="state-search" name="search" class="form-control"
+                                placeholder="Enter state here"
+                                aria-label="Search">
+                        </div>
                         {% for hit in all %}
                         {% if hit.state is not None %}
                         <input class="filter" name="filter" type="checkbox" value="{{hit.state}}-state"

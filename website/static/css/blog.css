@@ -141,7 +141,8 @@ svg rect{
 	padding:10px;
 	border-top:1px solid #ddd;
 	width:100%;
-	margin:0!important;
+    margin:0!important;
+    cursor:pointer;
 	-webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
@@ -193,7 +194,6 @@ svg rect{
     }
 }
 
-
 .icon, .icon-two, .icon-three{
     display:inline-block;
     float:right;
@@ -210,8 +210,31 @@ input#toggle:checked ~ .dropdown, input#toggle-two:checked ~ .dropdown-two,
     height:auto;
     max-height:635px;
     padding-right:20px;
+    padding-bottom:10px;
     visibility:visible;
     overflow:scroll;
+}
+
+#school-search, #state-search{
+    margin:5px 0 10px 0;
+    border:1px solid #ccc;
+    border-radius:0.15rem;
+    padding-left:35px; 
+}
+
+.inner-addon { 
+    position:relative; 
+}
+
+.inner-addon svg {
+  position:absolute;
+  margin:11px;
+  color:#aaa;
+  pointer-events:none;
+}
+
+.left-addon svg { 
+    left:0px;
 }
 
 .count{

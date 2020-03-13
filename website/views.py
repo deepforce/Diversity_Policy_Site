@@ -13,20 +13,20 @@ import ast
 # Create your views here.
 from django.core.paginator import Paginator, Page
 
-class DSEPaginator(Paginator):
-    """
-    Override Django's built-in Paginator class to take in a count/total number of items;
-    Elasticsearch provides the total as a part of the query results, so we can minimize hits.
-    """
-    def __init__(self, *args, **kwargs):
-        super(DSEPaginator, self).__init__(*args, **kwargs)
-        self._count = self.object_list.hits.total
+# class DSEPaginator(Paginator):
+#     """
+#     Override Django's built-in Paginator class to take in a count/total number of items;
+#     Elasticsearch provides the total as a part of the query results, so we can minimize hits.
+#     """
+#     def __init__(self, *args, **kwargs):
+#         super(DSEPaginator, self).__init__(*args, **kwargs)
+#         self._count = self.object_list.hits.total
 
-    def page(self, number):
-        # this is overridden to prevent any slicing of the object_list - Elasticsearch has
-        # returned the sliced data already.
-        number = self.validate_number(number)
-        return Page(self.object_list, number, self)
+#     def page(self, number):
+#         # this is overridden to prevent any slicing of the object_list - Elasticsearch has
+#         # returned the sliced data already.
+#         number = self.validate_number(number)
+#         return Page(self.object_list, number, self)
 
 def search_home(request):
     return render(request, 'website/search_home.html')
@@ -92,12 +92,17 @@ def policy_search(request):
     # term_search_lst = ['title','school','abstract']
     term = request.GET.get('search')
     fil = request.GET.getlist('filter')
+    num_results = request.GET.get('num_results')
 
     # print(term, fil)
     policies = search(term, fil)
     unfiltered = search(term)
 
-    paginator = Paginator(policies, 15)
+    if num_results is not None:
+        num_results = int(num_results)
+        paginator = Paginator(policies, num_results)
+    else:
+        paginator = Paginator(policies, 10)
 
     page = request.GET.get('page')
 

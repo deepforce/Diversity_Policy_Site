@@ -110,7 +110,7 @@ $(document).ready(function() {
 
     // Filter labels (years and school names)
     $('.filter').each(function(){
-        $(this).wrap("<label></label>");
+        $(this).wrap('<label class="filter-label"></label>');
         if(this.getAttribute("data-school") != null){
             $(this).val(this.getAttribute("data-school").toLowerCase());
         }
@@ -131,6 +131,48 @@ $(document).ready(function() {
         this.innerHTML += "<span> " + state + "</span>";
     });
 
+    // Check school filter based on entered keyword
+    $("#school-search").keyup(function(){
+        let search = $(this).val().toLowerCase();
+        $('.filter-label').each(function(){
+            if(search.length > 0 && $(this).children(".filter").data("school") != null 
+            && !$(this).children(".filter").data("school").toLowerCase().includes(search)) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        })
+    });
+
+    // Check state filter based on entered keyword
+    $("#state-search").keyup(function(){
+        let search = $(this).val().toLowerCase();
+        $('.filter-label').each(function(){
+            if(search.length > 0 && $(this).children(".filter").data("state") != null 
+            && !$(this).children(".filter").data("state").toLowerCase().includes(search)) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        })
+    });
+    
+    // Prevent form submit when pressing enter in the school/state search boxes
+    $("#school-form").on('keyup keypress', function(e){
+        let keyCode = e.keyCode || e.which;
+        if(keyCode === 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $("#state-form").on('keyup keypress', function(e){
+        let keyCode = e.keyCode || e.which;
+        if(keyCode === 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
 
     // Load/unload filtered content without page refresh
     var filter_url = window.location.search;
