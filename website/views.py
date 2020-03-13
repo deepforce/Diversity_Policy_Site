@@ -82,10 +82,10 @@ def build_local_table():
 
 def policy_search(request):
 
-    # if the table is empty, insert data from remote db
-    items = Policy.objects.all()
-    if len(items) == 0:
-        build_local_table()
+    # # if the table is empty, insert data from remote db
+    # items = Policy.objects.all()
+    # if len(items) == 0:
+    #     build_local_table()
 
 
     # table_name = 'policies'
