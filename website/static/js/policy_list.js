@@ -1,5 +1,15 @@
 $(document).ready(function() {
 
+    $(".school_name").each(function(){
+        $(this).text($(this).text().toTitleCase());
+    });
+
+    $(".card-title").each(function(){
+        $(this).text($(this).text().toTitleCase());
+    });
+
+    $("#loader").hide();
+
     // Year filter dropdown
     $(".panel").click(function(){
         var icon = document.querySelector(".icon");
@@ -17,6 +27,15 @@ $(document).ready(function() {
             two.innerHTML = "–";
         } else {
             two.innerHTML = "+";
+        }
+    });
+
+    $(".panel-three").click(function(){
+        var three = document.querySelector(".icon-three");
+        if(document.querySelector("#toggle-three").checked == false) {
+            three.innerHTML = "–";
+        } else {
+            three.innerHTML = "+";
         }
     });
 
@@ -58,6 +77,7 @@ $(document).ready(function() {
     // Filters
     var years = [];
     var schools = [];
+    var states = [];
     $('.filter').each(function(){
         if(this.getAttribute("data-year") != null){
             var year = this.getAttribute("data-year").split(" ");
@@ -78,11 +98,19 @@ $(document).ready(function() {
                 $(this).remove();
             }
         }
+        if(this.getAttribute("data-state") != null){
+            var state = this.getAttribute("data-state").trim();
+            if(!states.includes(state)){
+                states.push(state);
+            } else {
+                $(this).remove();
+            }
+        }
     });
 
     // Filter labels (years and school names)
     $('.filter').each(function(){
-        $(this).wrap("<label></label>");
+        $(this).wrap('<label class="filter-label"></label>');
         if(this.getAttribute("data-school") != null){
             $(this).val(this.getAttribute("data-school").toLowerCase());
         }
@@ -98,6 +126,53 @@ $(document).ready(function() {
         this.innerHTML += "<span> " + school + "</span>";
     });
 
+    $('.dropdown-three label').each(function(){
+        var state = $(this).find("input").data("state").toTitleCase();
+        this.innerHTML += "<span> " + state + "</span>";
+    });
+
+    // Check school filter based on entered keyword
+    $("#school-search").keyup(function(){
+        let search = $(this).val().toLowerCase();
+        $('.filter-label').each(function(){
+            if(search.length > 0 && $(this).children(".filter").data("school") != null 
+            && !$(this).children(".filter").data("school").toLowerCase().includes(search)) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        })
+    });
+
+    // Check state filter based on entered keyword
+    $("#state-search").keyup(function(){
+        let search = $(this).val().toLowerCase();
+        $('.filter-label').each(function(){
+            if(search.length > 0 && $(this).children(".filter").data("state") != null 
+            && !$(this).children(".filter").data("state").toLowerCase().includes(search)) {
+                $(this).hide();
+            } else {
+                $(this).show();
+            }
+        })
+    });
+    
+    // Prevent form submit when pressing enter in the school/state search boxes
+    $("#school-form").on('keyup keypress', function(e){
+        let keyCode = e.keyCode || e.which;
+        if(keyCode === 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $("#state-form").on('keyup keypress', function(e){
+        let keyCode = e.keyCode || e.which;
+        if(keyCode === 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
 
     // Load/unload filtered content without page refresh
     var filter_url = window.location.search;
@@ -107,18 +182,41 @@ $(document).ready(function() {
             var school = encodeURIComponent(this.getAttribute("data-school").toLowerCase().trim());
             var str2 = "&filter=" + school;
         }
+        if(this.getAttribute("data-state") != null) {
+            var state = encodeURIComponent(this.value.toLowerCase().trim());
+            var str3 = "&filter=" + state;
+        }
         if($(this).prop("checked") == false) {
+            $("#loader").show();
             filter_url = filter_url.replace(str, "");
             filter_url = filter_url.replace(str2, "");
+            filter_url = filter_url.replace(str3, "");
             window.history.pushState({}, null, filter_url);
-            $("#results").load(filter_url + " #results");
-            $(window).scrollTop(0);
+            $("#results").load(filter_url + " #results", function(){
+                $("#loader").hide();
+                $(".card-title").each(function(){
+                    $(this).text($(this).text().toTitleCase());
+                });
+                $(".school_name").each(function(){
+                    $(this).text($(this).text().toTitleCase());
+                });
+                $(window).scrollTop(0);
+            });
         }
         else {
+            $("#loader").show();
             filter_url += ("&" + $(this).serialize());
             window.history.pushState({}, null, filter_url);
-            $("#results").load(filter_url + " #results");
-            $(window).scrollTop(0);
+            $("#results").load(filter_url + " #results", function(){
+                $("#loader").hide();
+                $(".card-title").each(function(){
+                    $(this).text($(this).text().toTitleCase());
+                });
+                $(".school_name").each(function(){
+                    $(this).text($(this).text().toTitleCase());
+                });
+                $(window).scrollTop(0);
+            });
         }
     });
 
@@ -129,10 +227,19 @@ $(document).ready(function() {
 
     // Scroll to top of results after navigating to a new page
     $(document).on("click", ".pagination a", function( event ) {
+        $("#loader").show();
         event.preventDefault();
         window.history.pushState({}, null, this.href);
-        $("#results").load(this.href + " #results");
-        $(window).scrollTop(0);
+        $("#results").load(this.href + " #results", function(){
+            $("#loader").hide();
+            $(".card-title").each(function(){
+                $(this).text($(this).text().toTitleCase());
+            });
+            $(".school_name").each(function(){
+                $(this).text($(this).text().toTitleCase());
+            });
+            $(window).scrollTop(0);
+        });
     });
 
 });
@@ -164,6 +271,19 @@ function sorter2(a,b) {
     if(a.dataset.school > b.dataset.school) return 1;
 }
 sorted2.forEach(e => document.querySelector("#school-filter > form").appendChild(e));
+
+
+var stateFilter = document.querySelectorAll("[data-state]");
+var stateFilterArray = Array.from(stateFilter);
+for(let i=0; i < stateFilterArray.length; i++){
+    stateFilterArray[i].setAttribute("data-state", stateFilterArray[i].getAttribute("data-state").toTitleCase());
+}
+let sorted3 = stateFilterArray.sort(sorter3);
+function sorter3(a,b) {
+    if(a.dataset.state < b.dataset.state) return -1;
+    if(a.dataset.state > b.dataset.state) return 1;
+}
+sorted3.forEach(e => document.querySelector("#state-filter > form").appendChild(e));
 
 // Copy link button
 function fallbackCopyTextToClipboard(text) {
@@ -250,7 +370,7 @@ function getMLA(source) {
         }
     }
     if(source.getAttribute("data-publisher")) {
-        var pub = source.getAttribute("data-publisher").trim();
+        var pub = source.getAttribute("data-publisher").trim().toTitleCase();
         mla += (pub.italics() + ', ');
     }
     if(source.getAttribute("data-pubdate") && source.getAttribute("data-pubdate") != "None") {
@@ -309,7 +429,7 @@ function getChicago(source) {
         }
     }
     if(source.getAttribute("data-publisher")) {
-        chicago += (source.getAttribute("data-publisher").trim() + '. ');
+        chicago += (source.getAttribute("data-publisher").trim() + '. ').toTitleCase();
     }
     if(source.getAttribute("data-pubdate") && source.getAttribute("data-pubdate") != "None") {
         chicago += (formatDate(source.getAttribute("data-pubdate").trim(), "chicago") + '. ');
