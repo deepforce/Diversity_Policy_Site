@@ -1,4 +1,10 @@
 language: python
+addons:
+  apt:
+    sources:
+      - travis-ci/sqlite3
+    packages:
+      - sqlite3
 python:
   - "3.7.6"
 # command to install dependencies
@@ -6,4 +12,5 @@ install:
   - pip install -r requirements.txt
 # command to run tests
 script:
+  - sqlite
   - python manage.py test website --keepdb
