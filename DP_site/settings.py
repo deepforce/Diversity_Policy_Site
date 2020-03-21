@@ -180,4 +180,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-django_heroku.settings(locals())
+# Configure Django App for Heroku.
+django_heroku.settings(locals(), test_runner=False)
