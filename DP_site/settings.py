@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-
+import sys
 import os
 import django_heroku 
 import dj_database_url
@@ -26,7 +26,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'seq5*nc-h#yrb4q-14h^fegrd_bx@v#(l#a^!%h(4s8f05kjrw'
-DEBUG = True
+DEBUG = False
 
 # Experimenting here
 ALLOWED_HOSTS = ["localhost", "https://stormy-stream-43261.herokuapp.com/"]
@@ -106,10 +106,7 @@ DATABASES = {
        'USER': 'ucdeqrj57q3flv',
        'PASSWORD': 'pd66f2f9fcd34c0363c86e8835c2a52baacc2bfcba7d0720ee9f0ff1ab48d584e',
        'HOST': 'ec2-3-81-238-195.compute-1.amazonaws.com',
-       'PORT': '5432',
-       'TEST': {
-           'NAME': 'test_dec8d7tivikhbg',
-       },
+       'PORT': '5432'
     }
 
     #
@@ -126,6 +123,14 @@ DATABASES = {
 
 }
 
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'testdb.sqlite3',
+        'TEST': {
+            'NAME': 'testdb.sqlite3',
+        }
+    }
 
 
 # Password validation
