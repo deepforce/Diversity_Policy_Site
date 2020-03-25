@@ -6,6 +6,8 @@ from .models import Policy
 from .search import search, search_suggest
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connection
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 import json
 import ast
@@ -169,4 +171,15 @@ def autocompleteModel(request):
 
 
 def login(request):
-    return render(request, 'website/login.html')
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        passw = request.POST.get('pass')
+        print(name,passw)
+        user = authenticate(username = name, password = passw)
+        if user is not None:
+            return render(request, 'website/search_home.html')
+        else:
+            return render(request, 'website/policy_list.html')
+    else:
+        return render(request, 'website/login.html')

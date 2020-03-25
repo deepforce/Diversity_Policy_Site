@@ -6,7 +6,6 @@
     
     <script  src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 	<script  src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script  src="{% static 'js/login.js' %}"></script>
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 	<title>Login Page</title>
    <!-- Created by Ryan Barth -->
@@ -30,19 +29,20 @@
 				
 			</div>
 			<div class="card-body">
-				<form onsubmit="event.preventDefault(); submission();">
+				<form method="POST"> 
+					{% csrf_token %}
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-user"></i></span>
 						</div>
-						<input type="text" class="form-control" id="user" placeholder="Username">
+						<input type="text" class="form-control" id="user" placeholder="Username" name="name">
 						
 					</div>
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-key"></i></span>
 						</div>
-						<input type="password" class="form-control" id="pass" placeholder="Password">
+						<input type="password" class="form-control" id="pass" placeholder="Password" name = "pass">
 					</div>
 					<div class="row align-items-center remember">
 						<input type="checkbox">Remember Me
