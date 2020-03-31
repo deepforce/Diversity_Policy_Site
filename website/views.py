@@ -115,12 +115,15 @@ def policy_search(request):
 
     return render(request, 'website/policy_list.html', {'policies': policies, 'all': unfiltered, 'max_pages': paginator.num_pages})
 
-# class FacetedSearchView(BaseFacetedSearchView):
-#     form_class = FacetedPolicySearchForm
-#     facet_fields = ['school', 'published year']
-#     template_name = 'policy_list.html'
-#     paginate_by = 3
-#     context_object_name = 'object_list'
+"""
+View for Policy Submission Form 
+
+@param request- Django request object 
+@return - Django response (renders the template specified in render() function)
+"""
+
+def policy_submit(request):
+    return render(request, 'website/policy_submit.html')
 
 # Autocomplete function -- takes text as it is being typed into the search bar, runs a simple prefix search over
 # just the "title" field, and returns a list of the matches which will then be displayed as suggestions from the

@@ -86,31 +86,30 @@ def get_exclude_stmt(field, exclude_term):
 # @param terms - a list of terms to search
 # @return stmt_term - a sql statement
 #
-def get_stmt_term(stmt_term, type_name, terms):
-    FIELDS = ('title', 'school', 'department', 'administrator', 'author',
-              'state', 'city', 'link', 'tags', 'abstract')
-    TYPES = ('seq', 'exact', 'exclude')
+def get_stmt_term(seq_term, exact_term, exclude_term):
+    stmt_term = ""
 
-    if type_name not in TYPES:
-        return ""
-
-    for field in FIELDS:
-        if type_name == TYPES[0]:
-            seq_term = terms
-            cur_stmt = get_seq_stmt(field, seq_term)
-        elif type_name == TYPES[1]:
-            exact_term = terms
-            cur_stmt = get_exact_stmt(field, exact_term)
-        else:  # TYPES[2]
-            exclude_term = terms
-            cur_stmt = get_exclude_stmt(field, exclude_term)
-        if cur_stmt:
-            if stmt_term:  # non-empty stmt, need prepend ADD
-                if type_name == TYPES[2]:
-                    stmt_term += " AND "
-                else:
-                    stmt_term += " OR "
-            stmt_term += cur_stmt
+    # print("=========")
+    if seq_term:
+        # print("hhh")
+        stmt_term += " & ".join(seq_term)
+    # print(stmt_term)
+    if exact_term:
+        # print("hhh")
+        if seq_term:
+            stmt_term += " & ("
+        stmt_term += " | ".join(exact_term)
+        if seq_term:
+            stmt_term += ")"
+    # print(stmt_term)
+    if exclude_term:
+        if seq_term or exact_term:
+            stmt_term += " & ("
+        stmt_term += " & !".join(exclude_term)
+        if seq_term or exact_term:
+            stmt_term += ")" 
+    # print(stmt_term)
+    # print("=========")
     return stmt_term
 
 # Return sql statement of filter terms, inclusive search.
@@ -250,7 +249,6 @@ def search(query, filter=None):
     if query:
         include_term = set(query.split(" "))
         
-
     # print("seq    :", seq_term)
     # print("exact  :", list(exact_term))
     # print("include:", list(include_term))
@@ -259,11 +257,9 @@ def search(query, filter=None):
     if include_term:
         exact_term = exact_term.union(include_term)
 
-    STMT_TERM = ""
-    STMT_TERM = get_stmt_term(STMT_TERM, "seq", seq_term)
-    STMT_TERM = get_stmt_term(STMT_TERM, "exact", list(exact_term))
-    STMT_TERM = get_stmt_term(STMT_TERM, "exclude", list(exclude_term))
-  
+    STMT_TERM = "to_tsquery('{}')".format(get_stmt_term(seq_term, list(exact_term), list(exclude_term)))
+    # print(STMT_TERM)
+
     STMT = "SELECT title, school, department, administrator, author, " + \
                   "state, city, link, " + \
                   "(CASE WHEN published_date < '1000-01-01' THEN NULL " + \
@@ -271,10 +267,10 @@ def search(query, filter=None):
                    "END) AS published_date, " + \
                   "tags, abstract " + \
            "FROM policies " + \
-           "WHERE " + STMT_FILTER + "(" + STMT_TERM + ");"
+           "WHERE {} to_tsvector(title || abstract) @@ {};".format(STMT_FILTER, STMT_TERM)
 
     # print(STMT)
-    print("START Fetching...")
+    print("Start Fetching...")
     result = []
     with connection.cursor() as cursor:
         cursor.execute(STMT)
@@ -297,7 +293,7 @@ def search(query, filter=None):
                 text = ""
             )
             result.append(item)
-    print("END Fetching.")
+    print("Finish Fetching.")
     print("length of result:", len(result))
     return result
 
