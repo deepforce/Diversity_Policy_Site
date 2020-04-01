@@ -9,8 +9,8 @@ class TestViews(TestCase):
         self.index_view_url = reverse('index_view')
         self.policy_search_url = reverse('policy-search')
         self.policy_suggest_url = reverse('policy-suggest')
-        self.about_page_url = reverse('about_page')
-        self.contribute_policy_url = reverse('contribute_policy')
+        # self.about_page_url = reverse('about_page')
+        # self.contribute_policy_url = reverse('contribute_policy')
         
 
     def test_index_view_GET(self):
@@ -34,17 +34,17 @@ class TestViews(TestCase):
         pass
         
 
-    def test_about_page_GET(self):
-        response = self.client.get(self.about_page_url)
+    # def test_about_page_GET(self):
+    #     response = self.client.get(self.about_page_url)
 
-        self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, 'website/about_page.html')
+    #     self.assertEquals(response.status_code, 200)
+    #     self.assertTemplateUsed(response, 'website/about_page.html')
 
 
-    def test_contribute_policy_GET(self):
-        response = self.client.get(self.contribute_policy_url)
+    # def test_contribute_policy_GET(self):
+    #     response = self.client.get(self.contribute_policy_url)
 
-        self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, 'website/contribute_policy.html')
+    #     self.assertEquals(response.status_code, 200)
+    #     self.assertTemplateUsed(response, 'website/contribute_policy.html')
     
     
