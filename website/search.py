@@ -269,7 +269,7 @@ def search(query, filter=None):
            "FROM policies " + \
            "WHERE {} to_tsvector('english', title || ' ' || abstract || ' ' || text) @@ {};".format(STMT_FILTER, STMT_TERM)
 
-    print(STMT)
+    # print(STMT)
     print("Start Fetching...")
     result = []
     with connection.cursor() as cursor:
