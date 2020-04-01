@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.http import HttpResponse, HttpRequest, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from .models import Policy
 from .search import search, search_suggest
@@ -14,6 +14,7 @@ import ast
 
 # Create your views here.
 from django.core.paginator import Paginator, Page
+from django.contrib import messages
 
 class DSEPaginator(Paginator):
     """
@@ -169,7 +170,9 @@ def autocompleteModel(request):
 
     return JsonResponse({ 'suggestions': data })
 
-
+#Uses the Django in-house user auth and user creation, please think about this
+#Before we decide to get rid of Django or not in the future (doing this would mean reimplementing
+# a user login and auth system)
 def login(request):
 
     if request.method == 'POST':
@@ -178,8 +181,9 @@ def login(request):
         print(name,passw)
         user = authenticate(username = name, password = passw)
         if user is not None:
-            return render(request, 'website/search_home.html')
+            return redirect( '/', request)
         else:
-            return render(request, 'website/policy_list.html')
+            messages.error(request,'Login failed: username or password incorrect')
+            return redirect('login')
     else:
         return render(request, 'website/login.html')
