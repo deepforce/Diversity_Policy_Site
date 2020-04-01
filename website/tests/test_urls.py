@@ -16,9 +16,9 @@ class TestUrls(SimpleTestCase):
         self.assertEquals(resolve(url).func, autocompleteModel)
 
     def test_about_page_url_resolves(self):
-        url = reverse('about-page')
+        url = reverse('about_page')
         self.assertEquals(resolve(url).func, about_page)
 
     def test_contribute_policy_url_resolves(self):
-        url = reverse('contribute-policy')
+        url = reverse('contribute_policy')
         self.assertEquals(resolve(url).func, contribute_policy)
