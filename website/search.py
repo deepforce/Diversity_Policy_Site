@@ -267,9 +267,9 @@ def search(query, filter=None):
                    "END) AS published_date, " + \
                   "tags, abstract " + \
            "FROM policies " + \
-           "WHERE {} to_tsvector(title || abstract) @@ {};".format(STMT_FILTER, STMT_TERM)
+           "WHERE {} to_tsvector('english', title || ' ' || abstract || ' ' || text) @@ {};".format(STMT_FILTER, STMT_TERM)
 
-    # print(STMT)
+    print(STMT)
     print("Start Fetching...")
     result = []
     with connection.cursor() as cursor:

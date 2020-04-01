@@ -109,6 +109,15 @@ DATABASES = {
        'PORT': '5432'
     }
 
+    # 'default': {
+    #    'ENGINE': 'django.db.backends.postgresql',
+    #    'NAME': 'test_db',
+    #    'USER': 'Zack',
+    #    'PASSWORD': 'admin',
+    #    'HOST': '127.0.0.1',
+    #    'PORT': '5432'
+    # }
+
     #
     # 'default': dj_database_url.config(
     #     default=config('DATABASE_URL')
