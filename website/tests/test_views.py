@@ -9,8 +9,8 @@ class TestViews(TestCase):
         self.index_view_url = reverse('index_view')
         self.policy_search_url = reverse('policy-search')
         self.policy_suggest_url = reverse('policy-suggest')
-        self.about_page_url = reverse('about-page')
-        self.contribute_policy_url = reverse('contribute-policy')
+        self.about_page_url = reverse('about_page')
+        self.contribute_policy_url = reverse('contribute_policy')
         
 
     def test_index_view_GET(self):
