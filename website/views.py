@@ -6,6 +6,8 @@ from .models import Policy
 from .search import search, search_suggest
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connection
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 
 import json
 import ast
@@ -119,11 +121,14 @@ def policy_search(request):
 View for Policy Submission Form 
 
 @param request- Django request object 
-@return - Django response (renders the template specified in render() function)
+@return - Django response (renders form on GET, redirects to home page on POST)
 """
 
 def policy_submit(request):
-    return render(request, 'website/policy_submit.html')
+    if request.method == "GET":
+        return render(request, 'website/policy_submit.html')
+    elif request.method == "POST":
+        return HttpResponseRedirect("/")
 
 # Autocomplete function -- takes text as it is being typed into the search bar, runs a simple prefix search over
 # just the "title" field, and returns a list of the matches which will then be displayed as suggestions from the

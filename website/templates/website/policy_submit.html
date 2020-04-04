@@ -37,17 +37,22 @@
                 <label for="date">Date of Publication</label>
                 <input class="form-control" type="date" name="date" placeholder="YYYY-MM-DD">
             </div>
-            <div class="form-group">
-                <label>Author</label>
+            <div id="author_group" class="form-group">
+                <label>Author(s)</label>
                 <div class="form-row">
                     <div class="col">
-                        <input class="form-control" type="text" name="first_name" placeholder="First name">
+                        <input id="first_name" class="form-control" type="text" name="first_name" placeholder="First name">
                     </div>
                     <div class="col">
-                        <input class="form-control" type="text" name="middle_name" placeholder="Middle name">
+                        <input id="middle_name" class="form-control" type="text" name="middle_name" placeholder="Middle name">
                     </div>
                     <div class="col">
-                        <input class="form-control" type="text" name="last_name" placeholder="Last name">
+                        <input id="last_name" class="form-control" type="text" name="last_name" placeholder="Last name">
+                    </div>
+                </div>
+                <div id="add_author_button" class="form-row">
+                    <div class="col">
+                        <span id="add_author">Add Author</span>
                     </div>
                 </div>
             </div>
@@ -61,13 +66,22 @@
             </div>
             <div class="form-group">
                 <label for="admin">Department Administrator</label>
-                <input class="form-control" type="text" name="admin" placeholder="Last name, First name (e.g., Doe, Jane)">
-            </div>
+                <div class="form-row">
+                    <div class="col">
+                        <input id="admin_first_name" class="form-control" type="text" name="admin_first_name" placeholder="First name">
+                    </div>
+                    <div class="col">
+                        <input id="admin_middle_name" class="form-control" type="text" name="admin_middle_name" placeholder="Middle name">
+                    </div>
+                    <div class="col">
+                        <input id="admin_last_name" class="form-control" type="text" name="admin_last_name" placeholder="Last name">
+                    </div>
+                </div>            </div>
             <div class="form-group">
                 <div class="form-row">
                     <div class="col">
                         <label class="required" for="city">City</label>
-                        <input class="form-control" type="text" name="city" placeholder="e.g., Seattle" required>
+                        <input id="city" class="form-control" type="text" name="city" placeholder="e.g., Seattle" required>
                     </div>
                     <div class="col">
                         <label class="required" for="state">State</label>
@@ -131,6 +145,19 @@
             <div class="form-group">
                 <label class="required" for="tags">Tags</label>
                 <input class="form-control" type="text" name="tags" placeholder="e.g., Diversity" required>
+                <div class="form-row">
+                    <div id="tags" class="col">
+                        Example tags:
+                        <span class="tag">diversity</span>
+                        <span class="tag">policy</span>
+                        <span class="tag">inclusion</span>
+                        <span class="tag">disability</span>
+                        <span class="tag">human resources</span>
+                        <span class="tag">culture</span>
+                        <br><span class="tag">anti-discrimination</span>
+                        <span class="tag">equality</span>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label class="required" for="abstract">Abstract</label>
