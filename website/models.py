@@ -1,9 +1,10 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
-# from .search import policies
+from django.contrib.auth.models import AbstractUser
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.postgres.search import SearchVectorField
+from django.contrib.postgres.indexes import GinIndex
 
 class Policy(models.Model):
 
@@ -25,43 +26,39 @@ class Policy(models.Model):
 
     title = models.TextField(blank=True)
     school = models.CharField(max_length=255)
-    department = models.TextField(blank=True)
-    administrator = models.TextField(blank=True)
-    author = models.TextField(blank=True)
+    department = models.TextField(blank=True, null=True)
+    administrator = models.TextField(blank=True, null=True)
+    author = models.TextField(blank=True, null=True)
     state = models.TextField(blank=True)
     city = models.TextField(blank=True)
     latitude = models.CharField(max_length=255)
     longitude = models.CharField(max_length=255)
     link = models.TextField(blank=True)
     published_date = models.DateField(blank=True, null=True)
-    tags = models.CharField(choices=POSSIBLE_TAGS, max_length=255)
-    abstract = models.TextField(blank=True)
+    tags = models.CharField(choices=POSSIBLE_TAGS, max_length=255, null=True)
+    abstract = models.TextField(blank=True, null=True)
     text = models.TextField(blank=True)
-
-    # Add indexing method to Policy
-    def indexing(self):
-        obj = PolicyIndex(
-            meta={'id': self.id},
-            title = self.title,
-            school = self.school,
-            department = self.department,
-            administrator = self.administrator,
-            author = self.author,
-            state = self.state,
-            city = self.city,
-            latitude = self.latitude,
-            longitude = self.longitude,
-            link = self.link,
-            published_date = self.published_date,
-            tags = self.tags,
-            abstract = self.abstract,
-            text = self.text
-        )
-        obj.save(index='policy-index')
-        return obj.to_dict(include_meta=True)
+    search_vector = SearchVectorField(null=True)
+    
+    class Meta(object):
+        
+        indexes = [GinIndex(fields=['search_vector'])]
 
     def publish(self):
         self.save()
 
     def __str__(self):
         return self.title
+
+
+
+# Customized User Model
+class User(AbstractUser):
+  ROLES_CHOICES = (
+      (1, 'content_writer'),
+      (2, 'content_manager'),
+      (3, 'supervisor'),
+      (4, 'admin'),
+  )
+
+  roles = models.PositiveSmallIntegerField(choices=ROLES_CHOICES, default=4)

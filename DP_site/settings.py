@@ -191,3 +191,5 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Configure Django App for Heroku.
 django_heroku.settings(locals(), test_runner=False)
+
+AUTH_USER_MODEL = 'website.User'
