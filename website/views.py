@@ -7,7 +7,8 @@ from .search import search, search_suggest
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connection
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login as auth_login #So that it doesn't get overridden by the login view
+from django.contrib.auth.decorators import login_required
 
 import json
 import ast
@@ -134,7 +135,7 @@ def autocompleteModel(request):
         data = json.dumps(results)
     else:
         data = 'fail'
-    data = list(set([n.strip() for n in ast.literal_eval(data)]))[:10]
+    data = list(set([n.strip() for n in ast.literal_eval(data)]))[:10] # Get last 10 lines of Json obj and stripping spaces off them
     print("Text: ", q)
     query_length = len(q)
     #print("Suggestions: ", data)
@@ -178,12 +179,17 @@ def login(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         passw = request.POST.get('pass')
-        print(name,passw)
         user = authenticate(username = name, password = passw)
         if user is not None:
-            return redirect( '/', request)
+            auth_login(request, user)
+            return redirect( 'landing')
         else:
             messages.error(request,'Login failed: username or password incorrect')
             return redirect('login')
     else:
         return render(request, 'website/login.html')
+
+@login_required(redirect_field_name='login')
+def landing(request):
+    username = request.user.get_username()
+    return render(request, 'website/landing.html', {'username': username})
