@@ -117,19 +117,6 @@ def policy_search(request):
 
     return render(request, 'website/policy_list.html', {'policies': policies, 'all': unfiltered, 'max_pages': paginator.num_pages})
 
-"""
-View for Policy Submission Form 
-
-@param request- Django request object 
-@return - Django response (renders form on GET, redirects to home page on POST)
-"""
-
-def policy_submit(request):
-    if request.method == "GET":
-        return render(request, 'website/policy_submit.html')
-    elif request.method == "POST":
-        return HttpResponseRedirect("/")
-
 # Autocomplete function -- takes text as it is being typed into the search bar, runs a simple prefix search over
 # just the "title" field, and returns a list of the matches which will then be displayed as suggestions from the
 # search bar to the user

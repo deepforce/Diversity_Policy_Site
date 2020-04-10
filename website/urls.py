@@ -10,7 +10,6 @@ urlpatterns = [
     path('policy_suggest/', views.autocompleteModel, name='policy-suggest'),
     # path('about_page/', views.about_page, name='about-page'),
     # path('contribute_policy/', views.contribute_policy, name='contribute-policy')
-    path('policy_submit/', views.policy_submit, name="policy-submit"),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
