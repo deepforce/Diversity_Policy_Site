@@ -189,7 +189,24 @@ def login(request):
     else:
         return render(request, 'website/login.html')
 
-@login_required(redirect_field_name='login')
+@login_required()
 def landing(request):
     username = request.user.get_username()
     return render(request, 'website/landing.html', {'username': username})
+
+def signup(request):
+    if request.method == "POST":
+        post = request.POST
+        name = post.get('user')
+        user = User.objects.get(username = name)
+        if user is not None:
+            messages.error(request, 'Username is taken, please try another')
+            return redirect('signup')
+        else:
+            passw = post.get('p1')
+            email = post.get('email')
+            User.objects.create_user(name, email = email,password = passw)
+            return redirect('login')
+    else:
+        return render(request, 'website/signup.html')
+

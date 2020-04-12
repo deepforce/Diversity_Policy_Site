@@ -167,6 +167,9 @@ USE_TZ = True
 #STATIC_URL = './staticfiles/'
 STATIC_URL = '/static/'
 
+#Where the Django will redirect the user if they need to login
+LOGIN_URL = '/login/'
+
 # STATICFILES_DIRS = (
 #     #'/Diversity_Policy_Site/blog/static',
 #     os.path.join(BASE_DIR, '/static/'),
