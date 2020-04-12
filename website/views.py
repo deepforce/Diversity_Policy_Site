@@ -6,14 +6,11 @@ from .models import Policy
 from .search import search, search_suggest
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connection
-<<<<<<< HEAD
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-=======
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login #So that it doesn't get overridden by the login view
 from django.contrib.auth.decorators import login_required
->>>>>>> login
 
 import json
 import ast
