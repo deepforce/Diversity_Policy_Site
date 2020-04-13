@@ -1,0 +1,59 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="{% static 'css/signup.css' %}" type="text/css"/>
+        <!------ Include the above in your HEAD tag ---------->
+        <!---- Created by Ryan Barth for Diversity Policy 4-2020 ---->
+</head>
+<body>
+    <div class="container register-form">
+        <div class="form">
+            <div class="note">
+                <p>Sign up for a Diversity Policy account</p>
+            </div>
+
+            <div class="form-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Username" value="" id="user"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Email" value="" id="email"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Password" value="" id="p1"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" oninput="sameP()" class="form-control" placeholder="Confirm Password" value="" id="p2"/>
+                            <span id="errorpass"></span>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btnSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    function sameP(){
+        var p1 = document.getElementById("p1").value;
+        var p2 = document.getElementById("p2").value;
+        if(p1 != p2 && p1.length == p2.length){
+            document.getElementById("errorpass").innerText = "The passwords do not match"
+        }
+        else{
+            document.getElementById("errorpass").innerText = ""
+        }
+    }
+</script>
+    
+</html>

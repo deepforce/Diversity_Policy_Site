@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.http import HttpResponse, HttpRequest, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
 from .models import Policy
 from .search import search, search_suggest
@@ -8,12 +8,16 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db import connection
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login as auth_login #So that it doesn't get overridden by the login view
+from django.contrib.auth.decorators import login_required
 
 import json
 import ast
 
 # Create your views here.
 from django.core.paginator import Paginator, Page
+from django.contrib import messages
 
 # class DSEPaginator(Paginator):
 #     """
@@ -131,7 +135,7 @@ def autocompleteModel(request):
         data = json.dumps(results)
     else:
         data = 'fail'
-    data = list(set([n.strip() for n in ast.literal_eval(data)]))[:10]
+    data = list(set([n.strip() for n in ast.literal_eval(data)]))[:10] # Get last 10 lines of Json obj and stripping spaces off them
     print("Text: ", q)
     query_length = len(q)
     #print("Suggestions: ", data)
@@ -166,4 +170,43 @@ def autocompleteModel(request):
     data.sort(key=lambda s: len(s))
 
     return JsonResponse({ 'suggestions': data })
+
+#Uses the Django in-house user auth and user creation, please think about this
+#Before we decide to get rid of Django or not in the future (doing this would mean reimplementing
+# a user login and auth system)
+def login(request):
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        passw = request.POST.get('pass')
+        user = authenticate(username = name, password = passw)
+        if user is not None:
+            auth_login(request, user)
+            return redirect( 'landing')
+        else:
+            messages.error(request,'Login failed: username or password incorrect')
+            return redirect('login')
+    else:
+        return render(request, 'website/login.html')
+
+@login_required()
+def landing(request):
+    username = request.user.get_username()
+    return render(request, 'website/landing.html', {'username': username})
+
+def signup(request):
+    if request.method == "POST":
+        post = request.POST
+        name = post.get('user')
+        user = User.objects.get(username = name)
+        if user is not None:
+            messages.error(request, 'Username is taken, please try another')
+            return redirect('signup')
+        else:
+            passw = post.get('p1')
+            email = post.get('email')
+            User.objects.create_user(name, email = email,password = passw)
+            return redirect('login')
+    else:
+        return render(request, 'website/signup.html')
 
